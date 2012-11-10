@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>µTip Demo</title>
+
+    <link rel="stylesheet" href="css/prettify.css">
+    <link rel="stylesheet" href="css/docs.css">
+</head>
+<body onload="prettyPrint()">
+
+<h1 class="headline">µTip Demo</h1>
+
+<div class="example clearfix">
+    <div class="label">
+        <h2>Basic</h2>
+        Useful for when you simply want a tooltip with some static text, and you're fine with the default styling.
+    </div>
+    <div class="body">
+        <p><a href="#" id="example1">Hover here</a></p>
+        <label>Plain JavaScript:</label>
+        <pre class="prettyprint">
+new uTip(document.getElementById("example1"), { text: "Hello world!" });</pre>
+    </div>
+        <label>jQuery / Zepto:</label>
+        <pre class="prettyprint">
+$("#example1").uTip({ text: "Hello world!" });</pre>
+    </div>
+</div>
+
+<div class="example clearfix">
+    <div class="label">
+        <h2>Dynamic text</h2>
+        Similar to the basic example, but allows you to recalculate the tooltip text on every mouseover.
+    </div>
+    <div class="body">
+        <p><a href="#" id="example2">Hover here</a> or <a href="#" id="example3">place your cursor over me</a></p>
+        <label>Plain JavaScript:</label>
+        <pre class="prettyprint">
+new uTip([ document.getElementById("example2"), document.getElementById("example3") ], {
+    text: function(e) { return "You're hovering &lt;strong&gt;" + (e.target || e.srcElement).innerHTML + "&lt;/strong&gt;"; }
+});</pre>
+    </div>
+        <label>jQuery / Zepto:</label>
+        <pre class="prettyprint">
+$("#example2,#example3").uTip({
+    text: function(e) { return "You're hovering &lt;strong&gt;" + $(e.target || e.srcElement).text() + "&lt;/strong&gt;"; }
+});</pre>
+        <div class="aside"><strong>Note:</strong> As you see here, µTip can use the same tooltip for multiple elements. Simply pass an array of elements if you're using plain JavaScript, or a jQuery object of multiple elements if you're using jQuery.</div>
+        <div class="aside"><strong>Note:</strong> Because the text callback function is passed the mouseover event, you can manipulate the return value based upon the target element.</div>
+    </div>
+</div>
+
+<div class="example clearfix">
+    <div class="label">
+        <h2>Colors</h2>
+        One of the simplest customizations you can make is to add some color. Simply provide a base background color and µTip will find complementing colors for the background gradient, border, and text.
+    </div>
+    <div class="body">
+        <p><a href="#" id="example4">Color me RED</a></p>
+        <p><a href="#" id="example5">Color me YELLOW</a></p>
+        <p><a href="#" id="example6">Color me BLUE</a></p>
+        <label>Plain JavaScript:</label>
+        <pre class="prettyprint">
+new uTip(document.getElementById("example4"), {
+    backgroundColor: "#ff3f3f",
+    text: "Hello RED!"
+});
+new uTip(document.getElementById("example5"), {
+    backgroundColor: "#fffbcf",
+    text: "Hello YELLOW!"
+});
+new uTip(document.getElementById("example6"), {
+    backgroundColor: "#7cd1ff",
+    text: "Hello BLUE!"
+});</pre>
+    </div>
+        <label>jQuery / Zepto:</label>
+        <pre class="prettyprint">
+$("#example4").uTip({ backgroundColor: "#ff3f3f", text: "Hello RED!" });
+$("#example5").uTip({ backgroundColor: "#fffbcf", text: "Hello YELLOW!" });
+$("#example6").uTip({ backgroundColor: "#7cd1ff", text: "Hello BLUE!" });</pre>
+        <div class="aside"><strong>Note:</strong> Currently, backgroundColor only supports hex values (e.g. &quot;#000&quot; or &quot;#ff3f3f&quot;), not color names or RGB(A) values (e.g. &quot;Green&quot; or &quot;rgba(0, 0, 0, 0.25)&quot;)</div>
+        <div class="aside"><strong>Note:</strong> When the background color is perceived to be &quot;dark&quot;, the text will display in a lighter color (refer to the red tooltip in this example). See the following example for how to manipulate this further (specifically, the &quot;darkThreshold&quot; and &quot;textColor&quot; options).</div>
+    </div>
+</div>
+
+<div class="example clearfix">
+    <div class="label">
+        <h2>All options</h2>
+        There are a variety of options for manipulating the display of the tooltip. The following example, while hideous, makes use of every available option.
+    </div>
+    <div class="body">
+        <p><div id="example7">Hover here</div></p>
+        <label>Plain JavaScript:</label>
+        <pre class="prettyprint">
+new uTip(document.getElementById("example7"), {
+    backgroundColor: "#ccffff", // See example: "colors"
+    borderBrighten: -0.8,       // Percentage of pure white to add to border color
+    gradientBrighten: -0.5,     // Percentage of pure white to add to gradient target
+    textColor: "#ff9b66",       // Overide calculated text color
+    textShadow: false,          // Toggle text shadow display (CSS3 only)
+    darkThreshold: 0.1,         // At which perceived brightness to start using light color, as percentage of pure white
+    maxWidth: "150px",          // Corresponds to CSS max-width value
+    padding: "2px",             // Corresponds to CSS padding value
+    transitionTime: "0.2s",     // Fade in time, corresponding to CSS transition-duration value (CSS3 only)
+    transitionDelay: "0.5s",    // Fade in delay, corresponding to CSS transition-delay value (CSS3 only)
+    text: function() {
+        return "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore " +
+            "et dolore magna aliqua.";
+    }
+});</pre>
+    </div>
+        <label>jQuery / Zepto:</label>
+        <pre class="prettyprint">
+$("#example7").uTip({
+    backgroundColor: "#ccffff", // See example: "colors"
+    borderBrighten: -0.8,       // Percentage of pure white to add to border color
+    gradientBrighten: -0.5,     // Percentage of pure white to add to gradient target
+    textColor: "#ff9b66",       // Overide calculated text color
+    textShadow: false,          // Toggle text shadow display (CSS3 only)
+    darkThreshold: 0.1,         // At which perceived brightness to start using light color, as percentage of pure white
+    maxWidth: "150px",          // Corresponds to CSS max-width value
+    padding: "2px",             // Corresponds to CSS padding value
+    transitionTime: "0.2s",     // Fade in time, corresponding to CSS transition-duration value (CSS3 only)
+    transitionDelay: "0.5s",    // Fade in delay, corresponding to CSS transition-delay value (CSS3 only)
+    text: function() {
+        return "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore " +
+            "et dolore magna aliqua.";
+    }
+});</pre>
+        <div class="aside">
+            <strong>Note:</strong> As a reference, here are the default options:
+            <ul>
+                <li><strong>backgroundColor:</strong> "#eee"</li>
+                <li><strong>borderBrighten:</strong> -0.2</li>
+                <li><strong>gradientBrighten:</strong> 0.05</li>
+                <li><strong>textColor:</strong> undefined</li>
+                <li><strong>textShadow:</strong> true</li>
+                <li><strong>darkThreshold:</strong> 0.5</li>
+                <li><strong>maxWidth:</strong> "300px"</li>
+                <li><strong>padding:</strong> "8px"</li>
+                <li><strong>transitionTime:</strong> "0.2s"</li>
+                <li><strong>transitionDelay:</strong> "0s"</li>
+                <li><strong>text:</strong> function() { return ""; }</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<p class="github-info">
+    Copyright &copy; 2012 Andrew Duthie<br>
+    For project and license information, visit the <a href="https://github.com/aduth/uTip/">GitHub repository</a>
+</p>
+
+<script src="js/prettify.js"></script>
+<script src="js/uTip.js"></script>
+<script>
+// Basic
+new uTip(document.getElementById("example1"), { text: "Hello world!" });
+
+// Dynamic text
+new uTip([ document.getElementById("example2"), document.getElementById("example3") ], {
+    text: function(e) { return "You're hovering <strong>" + (e.target || e.srcElement).innerHTML + "</strong>"; }
+});
+
+// Colors
+new uTip(document.getElementById("example4"), {
+    backgroundColor: "#992626",
+    text: "Hello RED!"
+});
+new uTip(document.getElementById("example5"), {
+    backgroundColor: "#fffbcf",
+    text: "Hello YELLOW!"
+});
+new uTip(document.getElementById("example6"), {
+    backgroundColor: "#7CD1FF",
+    text: "Hello BLUE!"
+});
+
+// All options
+new uTip(document.getElementById("example7"), {
+    backgroundColor: "#ccffff", // See example: "colors"
+    borderBrighten: -0.8,       // Percentage of pure white to add to border color
+    gradientBrighten: -0.5,     // Percentage of pure white to add to gradient target
+    textColor: "#ff9b66",       // Overide calculated text color
+    textShadow: false,          // Toggle text shadow display (CSS3 only)
+    darkThreshold: 0.1,         // At which perceived brightness to start using light color, as percentage of pure white
+    maxWidth: "150px",          // Corresponds to CSS max-width value
+    padding: "2px",             // Corresponds to CSS padding value
+    transitionTime: "0.2s",     // Fade in time, corresponding to CSS transition-duration value (CSS3 only)
+    transitionDelay: "0.5s",    // Fade in delay, corresponding to CSS transition-delay value (CSS3 only)
+    text: function() {
+        return "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore " +
+            "et dolore magna aliqua.";
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body {
+    padding: 4% 8%;
+    background-color: #f9f7f4;
+    color: #57534a;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: Georgia, Tahoma, serif;
+}
+
+pre {
+    margin: 0;
+    display: inline-block;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+a,
+a:link,
+a:visited {
+    color: #187dbc;
+    text-decoration: none;
+    border-bottom: 1px dotted #187dbc;
+}
+a:hover {
+    color: #51afe9;
+    border-bottom: 1px dotted #51afe9;
+}
+
+.headline {
+    margin: 0;
+    padding-bottom: 0.4em;
+    font-size: 4em;
+    letter-spacing: -2px;
+    line-height: 1;
+    border-bottom: 1px dotted #CEC5B1;
+}
+
+.example {
+    margin-bottom: 1.5em;
+}
+
+.example label {
+    display: block;
+    padding: 1em;
+    padding-bottom: 0.4em;
+    margin: 0;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.example .aside {
+    font-size: 0.8em;
+    font-style: italic;
+    padding: 1.6em;
+    padding-bottom: 0;
+}
+
+.clearfix {
+    zoom: 1;
+}
+
+.clearfix:before,
+.clearfix:after {
+    content: "";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+#example7 {
+    display: inline-block;
+    border: 1px solid #666;
+    background-color: #eee;
+    padding: 0.3em;
+    cursor: help;
+}
+
+.github-info {
+    padding: 0.8em;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 0.9em;
+    text-align: right;
+    color: #a8a59f;
+    line-height: 1.5;
+}
