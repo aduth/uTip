@@ -221,7 +221,7 @@ border-top:8px solid #{colors.border}
     if $?
         plugin = "uTip"
         $.fn[plugin] = (options) ->
-            this.each ->
-                if not $(this).data("plugin_#{plugin}")
+            @.each ->
+                if not $(@).data("plugin_#{plugin}")
                     # Create uTip instance only if one is not already assigned
-                    $(this).data("plugin_#{plugin}", new uTip(this, options))
+                    $(@).data("plugin_#{plugin}", new uTip(@, options))
