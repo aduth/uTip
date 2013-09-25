@@ -80,6 +80,20 @@ do ($ = window.jQuery || window.Zepto, window, document = window.document) ->
 
             head.insertBefore(style, head.firstChild)
 
+        elementPosition: (el) ->
+            posLeft = posTop = 0
+
+            loop
+                posLeft += el.offsetLeft
+                posTop += el.offsetTop
+                el = el.offsetParent
+                break unless el
+
+            return {
+                left: posLeft
+                top: posTop
+            }
+
     # Defaults
     defaults =
         backgroundColor: "#eee"
@@ -203,9 +217,10 @@ border-top:8px solid #{colors.border}
                     @tip.className += " on"
                     @tip.innerHTML = @settings.text(e)
 
-                    left = target.offsetLeft + target.offsetWidth / 2 - @tip.offsetWidth / 2
+                    position = util.elementPosition(target)
+                    left = position.left + target.offsetWidth / 2 - @tip.offsetWidth / 2
                     left = 0 if left < 0
-                    top = target.offsetTop - @tip.offsetHeight - 8
+                    top = position.top - @tip.offsetHeight - 8
                     top = 0 if top < 0
 
                     @tip.style.left = "#{left}px"
