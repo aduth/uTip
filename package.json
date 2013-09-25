@@ -1,0 +1,21 @@
+{
+  "name": "uTip",
+  "version": "1.1.0",
+  "description": "A small JavaScript utility for displaying simple, elegant tooltips.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aduth/uTip.git"
+  },
+  "keywords": [
+    "tooltip",
+    "tip"
+  ],
+  "author": {
+    "name": "Andrew Duthie",
+    "email": "andrew@andrewduthie.com"
+    },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aduth/uTip/issues"
+  }
+}
