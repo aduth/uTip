@@ -148,6 +148,7 @@ Released under the MIT License
       padding: "8px",
       transitionTime: "0.2s",
       transitionDelay: "0s",
+      toggleOnHover: true,
       text: function() {
         return "";
       }
@@ -179,15 +180,18 @@ Released under the MIT License
           };
         }
         if (!this.constructor.init) {
-          util.prependStyle(".uTip{\nposition:absolute;\nvisibility:hidden;\nopacity:0;\nz-index:1000;\nborder-radius:4px;\nbox-shadow:0 1px 3px rgba(0,0,0,0.15),inset 1px 1px 0 rgba(255,255,255,0.5)\n}\n.uTip:before,\n.uTip:after{\ncontent:'';\nposition:absolute;\nz-index:1000;\nbottom:-7px;\nleft:50%;\nmargin-left:-8px;\nborder:8px solid transparent;\nborder-bottom:0\n}\n.uTip:before{\nbottom:-8px\n}");
+          util.prependStyle(".uTip{\nposition:absolute;\nvisibility:hidden;\nopacity:0;\nz-index:1000;\nborder-radius:4px;\nbox-shadow:0 1px 3px rgba(0,0,0,0.15),inset 1px 1px 0 rgba(255,255,255,0.5);\n}\n.uTip:before,\n.uTip:after{\ncontent:'';\nposition:absolute;\nbottom:-7px;\nleft:50%;\nmargin-left:-8px;\nborder:8px solid transparent;\nborder-bottom:0;\n}\n.uTip:before{\nbottom:-8px;\n}");
           this.constructor.init = true;
         }
         this.createTip();
+        if (this.settings.toggleOnHover) {
+          this.bindHover();
+        }
         this.bindEvents();
       }
 
       uTip.prototype.createTip = function() {
-        var colors, frag, isDark;
+        var colors, frag, isDark, tip;
         isDark = util.perceivedBrightness(this.settings.backgroundColor) < this.settings.darkThreshold;
         colors = {
           gradientTarget: util.brightenColor(this.settings.backgroundColor, this.settings.gradientBrighten),
@@ -195,41 +199,70 @@ Released under the MIT License
           text: this.settings.textColor || util.brightenColor(util.mixColor((isDark ? "#fff" : "#000"), this.settings.backgroundColor, 1), (isDark ? 1 : -0.25) * 0.25),
           shadow: !this.settings.textShadow ? "rgba(0,0,0,0)" : isDark ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.5)"
         };
-        frag = document.createElement("div");
-        frag.innerHTML = "<div class=\"uTip\" id=\"uTip" + (++this.constructor.guid) + "\"></div>";
-        util.prependStyle("#uTip" + this.constructor.guid + "{\npadding:" + this.settings.padding + ";\nmax-width:" + this.settings.maxWidth + ";\nbackground:" + colors.gradientTarget + ";\nbackground:-webkit-linear-gradient(" + this.settings.backgroundColor + "," + colors.gradientTarget + ");\nbackground:-moz-linear-gradient(" + this.settings.backgroundColor + "," + colors.gradientTarget + ");\nbackground:linear-gradient(" + this.settings.backgroundColor + "," + colors.gradientTarget + ");\nfilter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#" + (util.extendHex(this.settings.backgroundColor.replace('#', ''))) + "',endColorstr='#" + (util.extendHex(colors.gradientTarget.replace('#', ''))) + "',GradientType=0);\nborder:1px solid " + colors.border + ";\ncolor:" + colors.text + ";\ntext-shadow:1px 1px " + colors.shadow + ";\n-webkit-transition:visibility 0s linear " + this.settings.transitionTime + ",opacity " + this.settings.transitionTime + " linear;\n-moz-transition:visibility 0s linear " + this.settings.transitionTime + ",opacity " + this.settings.transitionTime + " linear;\ntransition:visibility 0s linear " + this.settings.transitionTime + ",opacity " + this.settings.transitionTime + " linear\n}\n#uTip" + this.constructor.guid + ".on{\nvisibility:visible;\nopacity:1;\n-webkit-transition-delay:" + this.settings.transitionDelay + ";\n-moz-transition-delay:" + this.settings.transitionDelay + ";\ntransition-delay:" + this.settings.transitionDelay + "\n}\n#uTip" + this.constructor.guid + ":after{\nborder-top:8px solid " + colors.gradientTarget + "\n}\n#uTip" + this.constructor.guid + ":before{\nborder-top:8px solid " + colors.border + "\n}");
+        frag = document.createDocumentFragment();
+        tip = document.createElement("div");
+        tip.className = "uTip";
+        tip.id = "uTip" + (++this.constructor.guid);
+        frag.appendChild(tip);
         this.tip = frag.firstChild;
-        return document.body.appendChild(this.tip);
+        document.body.appendChild(this.tip);
+        return util.prependStyle("#uTip" + this.constructor.guid + "{\npadding:" + this.settings.padding + ";\nmax-width:" + this.settings.maxWidth + ";\nbackground:" + colors.gradientTarget + ";\nbackground:-webkit-linear-gradient(" + this.settings.backgroundColor + "," + colors.gradientTarget + ");\nbackground:-moz-linear-gradient(" + this.settings.backgroundColor + "," + colors.gradientTarget + ");\nbackground:linear-gradient(" + this.settings.backgroundColor + "," + colors.gradientTarget + ");\nfilter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#" + (util.extendHex(this.settings.backgroundColor.replace('#', ''))) + "',endColorstr='#" + (util.extendHex(colors.gradientTarget.replace('#', ''))) + "',GradientType=0);\nborder:1px solid " + colors.border + ";\ncolor:" + colors.text + ";\ntext-shadow:1px 1px " + colors.shadow + ";\n-webkit-transition:visibility 0s linear " + this.settings.transitionTime + ",opacity " + this.settings.transitionTime + " linear;\n-moz-transition:visibility 0s linear " + this.settings.transitionTime + ",opacity " + this.settings.transitionTime + " linear;\ntransition:visibility 0s linear " + this.settings.transitionTime + ",opacity " + this.settings.transitionTime + " linear\n}\n#uTip" + this.constructor.guid + ".on{\nvisibility:visible;\nopacity:1;\n-webkit-transition-delay:" + this.settings.transitionDelay + ";\n-moz-transition-delay:" + this.settings.transitionDelay + ";\ntransition-delay:" + this.settings.transitionDelay + ";\n}\n#uTip" + this.constructor.guid + ":after{\nborder-top:8px solid " + colors.gradientTarget + ";\n}\n#uTip" + this.constructor.guid + ":before{\nborder-top:8px solid " + colors.border + ";\n}");
       };
 
-      uTip.prototype.bindEvents = function() {
+      uTip.prototype.bindHover = function() {
         var element, _i, _len, _ref,
           _this = this;
         _ref = this.elements;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           element = _ref[_i];
           util.on(element, "mouseover", function(e) {
-            var left, position, target, top;
+            var target;
             target = e.target || e.srcElement;
-            _this.tip.className += " on";
-            _this.tip.innerHTML = _this.settings.text(e);
-            position = util.elementPosition(target);
-            left = position.left + target.offsetWidth / 2 - _this.tip.offsetWidth / 2;
-            if (left < 0) {
-              left = 0;
-            }
-            top = position.top - _this.tip.offsetHeight - 8;
-            if (top < 0) {
-              top = 0;
-            }
-            _this.tip.style.left = "" + left + "px";
-            return _this.tip.style.top = "" + top + "px";
+            return _this.showTip(target);
           });
           util.on(element, "mouseout", function() {
-            return _this.tip.className = _this.tip.className.replace(/\s+on/, "");
+            return _this.hideTip();
           });
         }
         return true;
+      };
+
+      uTip.prototype.bindEvents = function() {
+        var element, _i, _len, _ref, _results,
+          _this = this;
+        _ref = this.elements;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          element = _ref[_i];
+          util.on(element, "showtooltip", function() {
+            return _this.showTip(element);
+          });
+          _results.push(util.on(element, "hidetooltip", function() {
+            return _this.hideTip();
+          }));
+        }
+        return _results;
+      };
+
+      uTip.prototype.showTip = function(context) {
+        var left, position, top;
+        this.tip.className += " on";
+        this.tip.innerHTML = this.settings.text(context);
+        position = util.elementPosition(context);
+        left = position.left + context.offsetWidth / 2 - this.tip.offsetWidth / 2;
+        if (left < 0) {
+          left = 0;
+        }
+        top = position.top - this.tip.offsetHeight - 8;
+        if (top < 0) {
+          top = 0;
+        }
+        this.tip.style.left = "" + left + "px";
+        return this.tip.style.top = "" + top + "px";
+      };
+
+      uTip.prototype.hideTip = function() {
+        return this.tip.className = this.tip.className.replace(/\s+on/, "");
       };
 
       return uTip;

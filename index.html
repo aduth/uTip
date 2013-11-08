@@ -38,13 +38,13 @@ $("#example1").uTip({ text: "Hello world!" });</pre>
         <label>Plain JavaScript:</label>
         <pre class="prettyprint">
 new uTip([ document.getElementById("example2"), document.getElementById("example3") ], {
-    text: function(e) { return "You're hovering &lt;strong&gt;" + (e.target || e.srcElement).innerHTML + "&lt;/strong&gt;"; }
+    text: function(context) { return "You're hovering &lt;strong&gt;" + context.innerHTML + "&lt;/strong&gt;"; }
 });</pre>
     </div>
         <label>jQuery / Zepto:</label>
         <pre class="prettyprint">
 $("#example2,#example3").uTip({
-    text: function(e) { return "You're hovering &lt;strong&gt;" + $(e.target || e.srcElement).text() + "&lt;/strong&gt;"; }
+    text: function(context) { return "You're hovering &lt;strong&gt;" + $(context).text() + "&lt;/strong&gt;"; }
 });</pre>
         <div class="aside"><strong>Note:</strong> As you see here, µTip can use the same tooltip for multiple elements. Simply pass an array of elements if you're using plain JavaScript, or a jQuery object of multiple elements if you're using jQuery.</div>
         <div class="aside"><strong>Note:</strong> Because the text callback function is passed the mouseover event, you can manipulate the return value based upon the target element.</div>
@@ -161,7 +161,7 @@ new uTip(document.getElementById("example1"), { text: "Hello world!" });
 
 // Dynamic text
 new uTip([ document.getElementById("example2"), document.getElementById("example3") ], {
-    text: function(e) { return "You're hovering <strong>" + (e.target || e.srcElement).innerHTML + "</strong>"; }
+    text: function(context) { return "You're hovering <strong>" + context.innerHTML + "</strong>"; }
 });
 
 // Colors
