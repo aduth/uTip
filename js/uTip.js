@@ -1,6 +1,6 @@
 /*
 uTip
-Copyright (C) 2012 Andrew Duthie
+Copyright (C) 2013 Andrew Duthie
 Released under the MIT License
 */
 
