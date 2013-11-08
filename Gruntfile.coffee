@@ -23,7 +23,7 @@ module.exports = (grunt) ->
                     'js/uTip.min.js': ['js/uTip.js']
 
         watch:
-            files: 'src/**/*.coffee'
+            files: 'coffee/**/*.coffee'
             tasks: ['compile']
 
     grunt.loadNpmTasks 'grunt-contrib-coffee'
