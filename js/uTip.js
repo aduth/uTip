@@ -148,6 +148,7 @@ Released under the MIT License
       padding: "8px",
       transitionTime: "0.2s",
       transitionDelay: "0s",
+      toggleOnHover: true,
       text: function() {
         return "";
       }
@@ -183,6 +184,9 @@ Released under the MIT License
           this.constructor.init = true;
         }
         this.createTip();
+        if (this.settings.toggleOnHover) {
+          this.bindHover();
+        }
         this.bindEvents();
       }
 
@@ -202,34 +206,60 @@ Released under the MIT License
         return document.body.appendChild(this.tip);
       };
 
-      uTip.prototype.bindEvents = function() {
+      uTip.prototype.bindHover = function() {
         var element, _i, _len, _ref,
           _this = this;
         _ref = this.elements;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           element = _ref[_i];
           util.on(element, "mouseover", function(e) {
-            var left, position, target, top;
+            var target;
             target = e.target || e.srcElement;
-            _this.tip.className += " on";
-            _this.tip.innerHTML = _this.settings.text(e);
-            position = util.elementPosition(target);
-            left = position.left + target.offsetWidth / 2 - _this.tip.offsetWidth / 2;
-            if (left < 0) {
-              left = 0;
-            }
-            top = position.top - _this.tip.offsetHeight - 8;
-            if (top < 0) {
-              top = 0;
-            }
-            _this.tip.style.left = "" + left + "px";
-            return _this.tip.style.top = "" + top + "px";
+            return _this.showTip(target);
           });
           util.on(element, "mouseout", function() {
-            return _this.tip.className = _this.tip.className.replace(/\s+on/, "");
+            return _this.hideTip();
           });
         }
         return true;
+      };
+
+      uTip.prototype.bindEvents = function() {
+        var element, _i, _len, _ref, _results,
+          _this = this;
+        _ref = this.elements;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          element = _ref[_i];
+          util.on(element, "showtooltip", function() {
+            return _this.showTip(element);
+          });
+          _results.push(util.on(element, "hidetooltip", function() {
+            return _this.hideTip();
+          }));
+        }
+        return _results;
+      };
+
+      uTip.prototype.showTip = function(context) {
+        var left, position, top;
+        this.tip.className += " on";
+        this.tip.innerHTML = this.settings.text(context);
+        position = util.elementPosition(context);
+        left = position.left + context.offsetWidth / 2 - this.tip.offsetWidth / 2;
+        if (left < 0) {
+          left = 0;
+        }
+        top = position.top - this.tip.offsetHeight - 8;
+        if (top < 0) {
+          top = 0;
+        }
+        this.tip.style.left = "" + left + "px";
+        return this.tip.style.top = "" + top + "px";
+      };
+
+      uTip.prototype.hideTip = function() {
+        return this.tip.className = this.tip.className.replace(/\s+on/, "");
       };
 
       return uTip;

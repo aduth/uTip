@@ -106,6 +106,7 @@ do ($ = window.jQuery || window.Zepto, window, document = window.document) ->
         padding: "8px"
         transitionTime: "0.2s"
         transitionDelay: "0s"
+        toggleOnHover: true
         text: -> ""
 
     # Tip class definition
@@ -163,6 +164,7 @@ bottom:-8px
                 @constructor.init = true
 
             @createTip()
+            @bindHover() if @settings.toggleOnHover
             @bindEvents()
 
         createTip: ->
@@ -209,25 +211,41 @@ border-top:8px solid #{colors.border}
             @tip = frag.firstChild
             document.body.appendChild(@tip);
 
+        bindHover: ->
+            for element in @elements
+                util.on element, "mouseover", (e) =>
+                    target = e.target or e.srcElement
+                    @showTip target
+
+                util.on element, "mouseout", =>
+                    @hideTip()
+            true
+
         bindEvents: ->
             for element in @elements
-                util.on(element, "mouseover", (e) =>
-                    target = e.target or e.srcElement
+                util.on element, "showtooltip", =>
+                    @showTip element
 
-                    @tip.className += " on"
-                    @tip.innerHTML = @settings.text(e)
+                util.on element, "hidetooltip", =>
+                    @hideTip()
 
-                    position = util.elementPosition(target)
-                    left = position.left + target.offsetWidth / 2 - @tip.offsetWidth / 2
-                    left = 0 if left < 0
-                    top = position.top - @tip.offsetHeight - 8
-                    top = 0 if top < 0
 
-                    @tip.style.left = "#{left}px"
-                    @tip.style.top = "#{top}px"
-                )
-                util.on(element, "mouseout", => @tip.className = @tip.className.replace(/\s+on/, ""))
-            true
+        showTip: (context) ->
+            @tip.className += " on"
+            @tip.innerHTML = @settings.text(context)
+
+            position = util.elementPosition(context)
+            left = position.left + context.offsetWidth / 2 - @tip.offsetWidth / 2
+            left = 0 if left < 0
+            top = position.top - @tip.offsetHeight - 8
+            top = 0 if top < 0
+
+            @tip.style.left = "#{left}px"
+            @tip.style.top = "#{top}px"
+
+        hideTip: ->
+            @tip.className = @tip.className.replace(/\s+on/, "")
+
 
     # Add uTip class to global
     window.uTip ?= uTip
