@@ -180,7 +180,7 @@ Released under the MIT License
           };
         }
         if (!this.constructor.init) {
-          util.prependStyle(".uTip{\nposition:absolute;\nvisibility:hidden;\nopacity:0;\nz-index:1000;\nborder-radius:4px;\nbox-shadow:0 1px 3px rgba(0,0,0,0.15),inset 1px 1px 0 rgba(255,255,255,0.5)\n}\n.uTip:before,\n.uTip:after{\ncontent:'';\nposition:absolute;\nz-index:1000;\nbottom:-7px;\nleft:50%;\nmargin-left:-8px;\nborder:8px solid transparent;\nborder-bottom:0\n}\n.uTip:before{\nbottom:-8px\n}");
+          util.prependStyle(".uTip{\nposition:absolute;\nvisibility:hidden;\nopacity:0;\nz-index:1000;\nborder-radius:4px;\nbox-shadow:0 1px 3px rgba(0,0,0,0.15),inset 1px 1px 0 rgba(255,255,255,0.5);\n}\n.uTip:before,\n.uTip:after{\ncontent:'';\nposition:absolute;\nbottom:-7px;\nleft:50%;\nmargin-left:-8px;\nborder:8px solid transparent;\nborder-bottom:0;\n}\n.uTip:before{\nbottom:-8px;\n}");
           this.constructor.init = true;
         }
         this.createTip();
@@ -191,7 +191,7 @@ Released under the MIT License
       }
 
       uTip.prototype.createTip = function() {
-        var colors, frag, isDark;
+        var colors, frag, isDark, tip;
         isDark = util.perceivedBrightness(this.settings.backgroundColor) < this.settings.darkThreshold;
         colors = {
           gradientTarget: util.brightenColor(this.settings.backgroundColor, this.settings.gradientBrighten),
@@ -199,11 +199,14 @@ Released under the MIT License
           text: this.settings.textColor || util.brightenColor(util.mixColor((isDark ? "#fff" : "#000"), this.settings.backgroundColor, 1), (isDark ? 1 : -0.25) * 0.25),
           shadow: !this.settings.textShadow ? "rgba(0,0,0,0)" : isDark ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.5)"
         };
-        frag = document.createElement("div");
-        frag.innerHTML = "<div class=\"uTip\" id=\"uTip" + (++this.constructor.guid) + "\"></div>";
-        util.prependStyle("#uTip" + this.constructor.guid + "{\npadding:" + this.settings.padding + ";\nmax-width:" + this.settings.maxWidth + ";\nbackground:" + colors.gradientTarget + ";\nbackground:-webkit-linear-gradient(" + this.settings.backgroundColor + "," + colors.gradientTarget + ");\nbackground:-moz-linear-gradient(" + this.settings.backgroundColor + "," + colors.gradientTarget + ");\nbackground:linear-gradient(" + this.settings.backgroundColor + "," + colors.gradientTarget + ");\nfilter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#" + (util.extendHex(this.settings.backgroundColor.replace('#', ''))) + "',endColorstr='#" + (util.extendHex(colors.gradientTarget.replace('#', ''))) + "',GradientType=0);\nborder:1px solid " + colors.border + ";\ncolor:" + colors.text + ";\ntext-shadow:1px 1px " + colors.shadow + ";\n-webkit-transition:visibility 0s linear " + this.settings.transitionTime + ",opacity " + this.settings.transitionTime + " linear;\n-moz-transition:visibility 0s linear " + this.settings.transitionTime + ",opacity " + this.settings.transitionTime + " linear;\ntransition:visibility 0s linear " + this.settings.transitionTime + ",opacity " + this.settings.transitionTime + " linear\n}\n#uTip" + this.constructor.guid + ".on{\nvisibility:visible;\nopacity:1;\n-webkit-transition-delay:" + this.settings.transitionDelay + ";\n-moz-transition-delay:" + this.settings.transitionDelay + ";\ntransition-delay:" + this.settings.transitionDelay + "\n}\n#uTip" + this.constructor.guid + ":after{\nborder-top:8px solid " + colors.gradientTarget + "\n}\n#uTip" + this.constructor.guid + ":before{\nborder-top:8px solid " + colors.border + "\n}");
+        frag = document.createDocumentFragment();
+        tip = document.createElement("div");
+        tip.className = "uTip";
+        tip.id = "uTip" + (++this.constructor.guid);
+        frag.appendChild(tip);
         this.tip = frag.firstChild;
-        return document.body.appendChild(this.tip);
+        document.body.appendChild(this.tip);
+        return util.prependStyle("#uTip" + this.constructor.guid + "{\npadding:" + this.settings.padding + ";\nmax-width:" + this.settings.maxWidth + ";\nbackground:" + colors.gradientTarget + ";\nbackground:-webkit-linear-gradient(" + this.settings.backgroundColor + "," + colors.gradientTarget + ");\nbackground:-moz-linear-gradient(" + this.settings.backgroundColor + "," + colors.gradientTarget + ");\nbackground:linear-gradient(" + this.settings.backgroundColor + "," + colors.gradientTarget + ");\nfilter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#" + (util.extendHex(this.settings.backgroundColor.replace('#', ''))) + "',endColorstr='#" + (util.extendHex(colors.gradientTarget.replace('#', ''))) + "',GradientType=0);\nborder:1px solid " + colors.border + ";\ncolor:" + colors.text + ";\ntext-shadow:1px 1px " + colors.shadow + ";\n-webkit-transition:visibility 0s linear " + this.settings.transitionTime + ",opacity " + this.settings.transitionTime + " linear;\n-moz-transition:visibility 0s linear " + this.settings.transitionTime + ",opacity " + this.settings.transitionTime + " linear;\ntransition:visibility 0s linear " + this.settings.transitionTime + ",opacity " + this.settings.transitionTime + " linear\n}\n#uTip" + this.constructor.guid + ".on{\nvisibility:visible;\nopacity:1;\n-webkit-transition-delay:" + this.settings.transitionDelay + ";\n-moz-transition-delay:" + this.settings.transitionDelay + ";\ntransition-delay:" + this.settings.transitionDelay + ";\n}\n#uTip" + this.constructor.guid + ":after{\nborder-top:8px solid " + colors.gradientTarget + ";\n}\n#uTip" + this.constructor.guid + ":before{\nborder-top:8px solid " + colors.border + ";\n}");
       };
 
       uTip.prototype.bindHover = function() {

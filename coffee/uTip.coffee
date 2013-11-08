@@ -145,21 +145,20 @@ visibility:hidden;
 opacity:0;
 z-index:1000;
 border-radius:4px;
-box-shadow:0 1px 3px rgba(0,0,0,0.15),inset 1px 1px 0 rgba(255,255,255,0.5)
+box-shadow:0 1px 3px rgba(0,0,0,0.15),inset 1px 1px 0 rgba(255,255,255,0.5);
 }
 .uTip:before,
 .uTip:after{
 content:'';
 position:absolute;
-z-index:1000;
 bottom:-7px;
 left:50%;
 margin-left:-8px;
 border:8px solid transparent;
-border-bottom:0
+border-bottom:0;
 }
 .uTip:before{
-bottom:-8px
+bottom:-8px;
 }""")
                 @constructor.init = true
 
@@ -176,8 +175,16 @@ bottom:-8px
                 text: @settings.textColor or util.brightenColor(util.mixColor((if isDark then "#fff" else "#000"), @settings.backgroundColor, 1), (if isDark then 1 else -0.25) * 0.25)
                 shadow: if not @settings.textShadow then "rgba(0,0,0,0)" else if isDark then "rgba(0,0,0,0.5)" else "rgba(255,255,255,0.5)"
 
-            frag = document.createElement("div")
-            frag.innerHTML = "<div class=\"uTip\" id=\"uTip#{++@constructor.guid}\"></div>"
+            frag = document.createDocumentFragment()
+
+            tip = document.createElement("div")
+            tip.className = "uTip"
+            tip.id = "uTip#{++@constructor.guid}"
+            frag.appendChild(tip)
+
+            @tip = frag.firstChild
+            document.body.appendChild(@tip);
+
             util.prependStyle("""
 #uTip#{@constructor.guid}{
 padding:#{@settings.padding};
@@ -199,17 +206,14 @@ visibility:visible;
 opacity:1;
 -webkit-transition-delay:#{@settings.transitionDelay};
 -moz-transition-delay:#{@settings.transitionDelay};
-transition-delay:#{@settings.transitionDelay}
+transition-delay:#{@settings.transitionDelay};
 }
 #uTip#{@constructor.guid}:after{
-border-top:8px solid #{colors.gradientTarget}
+border-top:8px solid #{colors.gradientTarget};
 }
 #uTip#{@constructor.guid}:before{
-border-top:8px solid #{colors.border}
+border-top:8px solid #{colors.border};
 }""")
-
-            @tip = frag.firstChild
-            document.body.appendChild(@tip);
 
         bindHover: ->
             for element in @elements
