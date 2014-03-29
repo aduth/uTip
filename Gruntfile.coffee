@@ -31,4 +31,5 @@ module.exports = (grunt) ->
     grunt.loadNpmTasks 'grunt-contrib-watch'
 
     grunt.registerTask 'compile', ['coffee', 'uglify']
-    grunt.registerTask 'default', ['compile', 'watch']
+    grunt.registerTask 'dev', ['compile', 'watch']
+    grunt.registerTask 'default', ['default']
